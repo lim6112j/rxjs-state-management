@@ -1,35 +1,24 @@
-import { Subject, Observable } from 'rxjs';
-type Loc = {
-  lng: number,
-  lat: number
-}
-export type States = State[]
-export type State = {
-  timestamp?: number,
-  locs: Loc[],
-  demands: [{ id: number, locs: Loc[] }?]
-}
+import { Subject } from 'rxjs';
+import { Action } from './types';
+import { reducer } from './reducer';
 export class StateStore {
   private static instance: StateStore;
-  private _states: Subject<States>;
-  private _statesUpdated$: Observable<States>;
-  private constructor(states: Subject<States>) {
-    this._states = states;
-    this._statesUpdated$ = this._states.asObservable()
+  private _action: Subject<Action>;
+  private constructor() {
+    this._action = new Subject<Action>();
   }
-  public static getInstance(states: Subject<States>): StateStore {
+  public static getInstance(): StateStore {
     if (!StateStore.instance) {
-      StateStore.instance = new StateStore(states);
+      StateStore.instance = new StateStore();
     }
     return StateStore.instance;
   }
-  getStatesSource() { return this._states; }
-  updateStates(states: States) {
-    this._states.next(states);
+  doAction(action: Action) {
+    this._action.next(action)
   }
   start() {
-    this._statesUpdated$.subscribe(data => {
-      console.log(data)
+    this._action.subscribe(data => {
+      reducer(data)
     })
 
   }

@@ -1,9 +1,10 @@
 import { Subject } from 'rxjs';
-import { Action } from './types';
-import { reducer } from './reducer';
+import { Action, State } from './types';
+import { combined_reducer } from '../reducer/reducer';
 export class StateStore {
   private static instance: StateStore;
   private _action: Subject<Action>;
+  private _state: State = { supply: [{ id: 1 }], demands: [{ id: 1 }] };
   private constructor() {
     this._action = new Subject<Action>();
   }
@@ -18,7 +19,10 @@ export class StateStore {
   }
   start() {
     this._action.subscribe(data => {
-      reducer(data)
+      combined_reducer.forEach(reducer => {
+        this._state = { ...reducer(data, this._state) }
+        console.log(this._state)
+      })
     })
 
   }

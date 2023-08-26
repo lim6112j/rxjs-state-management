@@ -1,11 +1,13 @@
+
 export type Loc = {
   timestamp?: number,
   lng: number,
   lat: number
 }
+export type ActionType = string
 export type Action = {
-  type: string,
-  payload: string
+  type: ActionType,
+  payload: unknown
 }
 export type State = {
   supply: [

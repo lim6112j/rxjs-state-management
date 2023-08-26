@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { Action, State } from './types';
+import { Action, State } from '../types/types';
 import { combined_reducer } from '../reducer/reducer';
 export class StateStore {
   private static instance: StateStore;
